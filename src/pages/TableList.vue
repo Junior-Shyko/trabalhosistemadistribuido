@@ -10,10 +10,10 @@
               <h4 class="card-title">Lista de usuários</h4>
               <p class="card-category">Lista com o nome de todos usuários cadastrados</p>
             </template>
-            <l-table class="table-hover table-striped table-sm"
+            <!-- <l-table class="table-hover table-striped table-sm"
                      :columns="table1.columns"
                      :data="table1.data">
-            </l-table>
+            </l-table> -->
           </card>
         </div>
       </div>
@@ -23,47 +23,7 @@
 <script>
   import LTable from 'src/components/Table.vue'
   import Card from 'src/components/Cards/Card.vue'
-  const tableColumns = ['Id', 'Name', 'Email', 'UserName', 'District', 'Acao']
-  const tableData = [{
-    id: 1,
-    name: 'Dakota Rice',
-    email: 'nataliaemily_@teo.com.br',
-    username: 'Niger',
-    district: 'Oud-Turnhout',
-    acao: 'Editar | Excluir'
-  },
-  {
-    id: 2,
-    name: 'Minerva Hooper',
-    email: 'nataliaemily_@teo.com.br',
-    username: 'Curaçao',
-    district: 'Sinaai-Waas',
-    acao: 'Editar | Excluir'
-  },
-  {
-    id: 3,
-    name: 'Sage Rodriguez',
-    email: 'nataliaemily_@teo.com.br',
-    username: 'Netherlands',
-    district: 'Baileux',
-    acao: 'Editar | Excluir'
-  },
-  {
-    id: 4,
-    name: 'Philip Chaney',
-    email: 'nataliaemily_@teo.com.br',
-    username: 'Korea, South',
-    district: 'Overland Park',
-    acao: 'Editar | Excluir'
-  },
-  {
-    id: 5,
-    name: 'Doris Greene',
-    email: 'nataliaemily_@teo.com.br',
-    username: 'Malawi',
-    district: 'Feldkirchen in Kärnten',
-    acao: 'Editar | Excluir'
-  }]
+  import axios from 'axios';
   export default {
     components: {
       LTable,
@@ -71,15 +31,24 @@
     },
     data () {
       return {
-        table1: {
-          columns: [...tableColumns],
-          data: [...tableData]
-        },
-        table2: {
-          columns: [...tableColumns],
-          data: [...tableData]
-        }
+        
       }
+    },
+    methods: {
+      allUsers: function() {
+        axios.get('http://134.122.90.6:4000/api/webservice/users')
+        .then(function (response) {
+          // handle success
+          console.log(response.data)
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error)
+        });
+      }
+    },
+    created() {
+      this.allUsers()
     }
   }
 </script>
