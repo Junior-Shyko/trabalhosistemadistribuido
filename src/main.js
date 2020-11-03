@@ -19,6 +19,7 @@ import App from './App.vue'
 
 // LightBootstrap plugin
 import LightBootstrap from './light-bootstrap-main'
+import { BootstrapVue, ModalPlugin } from 'bootstrap-vue'
 
 // router setup
 import routes from './routes/routes'
@@ -27,7 +28,11 @@ import './registerServiceWorker'
 // plugin setup
 Vue.use(VueRouter)
 Vue.use(LightBootstrap)
+Vue.use(BootstrapVue)
+Vue.use(ModalPlugin)
 
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 // configure router
 const router = new VueRouter({
   routes, // short for routes: routes

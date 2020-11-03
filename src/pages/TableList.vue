@@ -7,8 +7,12 @@
                 body-classes="table-full-width table-responsive"
           >
             <template slot="header">
-              <h4 class="card-title">Lista de usuários</h4>
-              <p class="card-category">Lista com o nome de todos usuários cadastrados</p>
+              <h4 class="card-title">
+                Lista de usuários
+              </h4>
+              <p class="card-category">Lista com o nome de todos usuários cadastrados</p> 
+
+            
             </template>
             <table class="table">
               <thead class="thead-dark">
@@ -26,7 +30,14 @@
                   <td>{{user.userWebservice_name}}</td>
                   <td>{{user.userWebservice_email}}</td>
                   <td>{{user.userWebservice_city}}</td>
-                  <td>Editar</td>
+                  <td>
+                    <button type="button" title="Editar Usuário" class="btn btn-primary btn-fill">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                    <button type="button" @click="showMsgBoxOne(user.userWebservice_id)" title="Excluir Usuário" class="btn btn-danger btn-fill">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </td>
                 </tr>
                 
               </tbody>
@@ -64,6 +75,27 @@
           // handle error
           console.log(error)
         });
+      },
+      showMsgBoxOne(id) {
+        console.log('clicou em excluir')
+        //this.$refs['modal-1'].show()
+        this.$bvModal.msgBoxConfirm('Deseja realmente excluir esse usuário?', {
+          title: 'Excluir',
+          size: 'sm',
+          buttonSize: 'sm',
+          okVariant: 'primary btn-fill',
+          okTitle: 'Sim, exluir',
+          cancelTitle: 'Não, desistir',
+          centered: false
+        })
+        .then(value => {
+          axios.delete('http://192.168.10.22:4000/api/webservice/delete' , {
+            userWebservice_id: id
+          })
+        })
+        .catch(err => {
+          // An error occurred
+        })
       }
     },
     created() {
