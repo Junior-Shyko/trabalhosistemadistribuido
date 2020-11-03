@@ -83,13 +83,14 @@
           title: 'Excluir',
           size: 'sm',
           buttonSize: 'sm',
-          okVariant: 'primary btn-fill',
+          okVariant: 'danger btn-fill',
+          cancelVariant: 'primary btn-fill',
           okTitle: 'Sim, exluir',
           cancelTitle: 'Não, desistir',
           centered: false
         })
         .then(value => {
-          axios.delete('http://192.168.10.22:4000/api/webservice/delete' , {
+          axios.delete('http://134.122.90.6/:4000/api/webservice/delete' , {
             userWebservice_id: id
           })
         })
