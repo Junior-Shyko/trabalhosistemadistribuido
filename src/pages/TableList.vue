@@ -53,6 +53,10 @@
   import LTable from 'src/components/Table.vue'
   import Card from 'src/components/Cards/Card.vue'
   import axios from 'axios';
+  import Vue from 'vue';
+  import VueSweetalert2 from 'vue-sweetalert2';
+  Vue.use(VueSweetalert2);
+
   export default {
     components: {
       LTable,
@@ -100,10 +104,22 @@
           centered: false
         })
         .then( function (response) {
-          console.log(response)
-          console.log({id})
+          // console.log(response)
+          // console.log({id})
+          
           axios.delete('http://192.168.10.22:4000/api/webservice/users/' + id,{
             headers: axiosConfig
+          }).then(res => {
+            console.log(res)
+            //this.allUsers()
+            Vue.swal({
+              type: 'success',
+              title: 'Sucesso',
+              text: 'Usuário excluido.'
+            });
+            
+          }).catch(erro => {
+            console.log(erro)
           })
         })
         .catch(err => {

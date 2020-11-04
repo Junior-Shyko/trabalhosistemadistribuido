@@ -31,6 +31,7 @@ Vue.use(LightBootstrap)
 Vue.use(BootstrapVue)
 Vue.use(ModalPlugin)
 
+
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 // configure router
