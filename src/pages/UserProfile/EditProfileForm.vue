@@ -100,7 +100,7 @@
         </div>
       </div>
       <div class="text-center">
-        <button type="submit" class="btn btn-info btn-fill float-right" @click.prevent="updateProfile">
+        <button type="submit" class="btn btn-info btn-fill float-right" @click.prevent="createProfile">
           Cadastrar
           <i class="nc-icon nc-simple-add"></i>
           
@@ -112,7 +112,7 @@
 </template>
 <script>
   import Card from 'src/components/Cards/Card.vue'
-
+  import axios from 'axios';
   export default {
     components: {
       Card
@@ -134,8 +134,15 @@
       }
     },
     methods: {
-      updateProfile () {
-        alert('Cadastrar: ' + JSON.stringify(this.user))
+      createProfile () {
+        // alert('Cadastrar: ' + JSON.stringify(this.user))
+        axios.post('http://192.168.10.22:4000/api/webservice/users',{
+            users: this.user
+        }).then(response => {
+            console.log(response)
+        }).catch(error => {
+            console.log(error)
+        })
       }
     }
   }

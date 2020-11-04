@@ -77,6 +77,16 @@
         });
       },
       showMsgBoxOne(id) {
+        let axiosConfig = {
+          headers: {
+              'Content-Type': 'application/json',
+              'Access-Control-Allow-Origin': '*',
+              'X-Requested-With': 'XMLHttpRequest',
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
+              'Access-Control-Allow-Headers': '*',
+          }
+        };
         console.log('clicou em excluir')
         //this.$refs['modal-1'].show()
         this.$bvModal.msgBoxConfirm('Deseja realmente excluir esse usuário?', {
@@ -89,13 +99,16 @@
           cancelTitle: 'Não, desistir',
           centered: false
         })
-        .then(value => {
-          axios.delete('http://134.122.90.6/:4000/api/webservice/delete' , {
-            userWebservice_id: id
+        .then( function (response) {
+          console.log(response)
+          console.log({id})
+          axios.delete('http://192.168.10.22:4000/api/webservice/users/' + id,{
+            headers: axiosConfig
           })
         })
         .catch(err => {
           // An error occurred
+          console.log(err)
         })
       }
     },
