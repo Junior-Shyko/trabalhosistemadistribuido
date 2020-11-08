@@ -3,7 +3,7 @@ version: '3'
 services:
 
   my-app:
-    container_name: my-app
+    container_name: vueapp
     build:
       context: .
       dockerfile: Dockerfile

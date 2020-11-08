@@ -25,15 +25,16 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for='user in users' :key="user.userWebservice_id">
+                <tr v-for='user in profiles' :key="user.userWebservice_id">
                   <th scope="row">{{user.userWebservice_id}}</th>
                   <td>{{user.userWebservice_name}}</td>
                   <td>{{user.userWebservice_email}}</td>
                   <td>{{user.userWebservice_city}}</td>
                   <td>
-                    <button type="button" title="Editar Usuário" class="btn btn-primary btn-fill">
-                      <i class="fa fa-edit"></i>
-                    </button>
+                     <b-button @click="showModal(user.userWebservice_id)">
+                       <i class="fa fa-edit"></i>
+                     </b-button>
+                      
                     <button type="button" @click="showMsgBoxOne(user.userWebservice_id)" title="Excluir Usuário" class="btn btn-danger btn-fill">
                       <i class="fa fa-trash"></i>
                     </button>
@@ -42,16 +43,25 @@
                 
               </tbody>
             </table>
-
+          <b-modal ref="modal-edit">
+            <template #modal-title>
+            Alterando usuário
+            </template>
+            <div class="d-block">
+              <form-user v-bind:user="user" type-data="atualizar"></form-user>
+            </div>
+          </b-modal>
           </card>
         </div>
       </div>
     </div>
   </div>
+  
 </template>
 <script>
   import LTable from 'src/components/Table.vue'
   import Card from 'src/components/Cards/Card.vue'
+  import FormUser from 'src/pages/UserProfile/Form.vue'
   import axios from 'axios';
   import Vue from 'vue';
   import VueSweetalert2 from 'vue-sweetalert2';
@@ -60,20 +70,34 @@
   export default {
     components: {
       LTable,
-      Card
+      Card,
+      FormUser
     },
     data () {
       return {
-        users: []
+        profiles: [],
+        user: []
       }
     },
     methods: {
+      showModal(id) {
+        console.log(id)
+        this.$refs['modal-edit'].show()
+        axios.get('http://192.168.10.22:4000/api/webservice/users/'+id)
+        .then( response => {
+          console.log(response)
+          //this.user = response.data
+        })
+        .catch( error => {
+          console.log(error)
+        })
+      },
       allUsers: function() {
         axios.get('http://192.168.10.22:4000/api/webservice/users')
         .then(response => {
           // handle success
           console.log(response.data)
-          this.users = response.data
+          this.profiles = response.data
         })
         .catch(function (error) {
           // handle error
