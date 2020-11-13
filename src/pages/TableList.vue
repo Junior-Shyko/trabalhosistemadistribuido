@@ -10,14 +10,12 @@
               <h4 class="card-title">
                 Lista de usuários
               </h4>
-              <p class="card-category">Lista com o nome de todos usuários cadastrados</p> 
-
-            
+              <p class="card-category">Lista com o nome de todos usuários cadastrados</p>
             </template>
             <table class="table">
               <thead class="thead-dark">
                 <tr>
-                  <th scope="col">ID</th>
+                  <th scope="col">Avatar</th>
                   <th scope="col">Nome</th>
                   <th scope="col">E-mail</th>
                   <th scope="col">Cidade</th>
@@ -35,7 +33,7 @@
                        <i class="fa fa-edit"></i>
                      </b-button>
                       
-                    <button type="button" @click="showMsgBoxOne(user.userWebservice_id)" title="Excluir Usuário" class="btn btn-danger btn-fill">
+                    <button type="button" @click="modalDeleteUser(user.userWebservice_id)" title="Excluir Usuário" class="btn btn-danger btn-fill">
                       <i class="fa fa-trash"></i>
                     </button>
                   </td>
@@ -43,13 +41,48 @@
                 
               </tbody>
             </table>
-          <b-modal ref="modal-edit">
+          <b-modal ref="modal-edit" centered size="lg">
             <template #modal-title>
             Alterando usuário
             </template>
             <div class="d-block">
               <form-user v-bind:user="user" type-data="atualizar"></form-user>
             </div>
+            <template #modal-footer>
+              <b-button
+                variant="secondary"
+                class="float-right  btn-fill"
+              >
+                Sair
+              </b-button>
+            </template>
+          </b-modal>
+          <!-- MOSAL DELETAR USUARIO -->
+          <b-modal ref="modal-delete" centered size="sm">
+            <template #modal-title>
+            Excluir Usuário
+            </template>
+            <div class="d-block">
+              <label for="">
+                Deseja Realmente excluir esse usuário?
+              </label>
+            </div>
+            <template #modal-footer>
+              <b-button
+                variant="secondary"
+                class="float-left  btn-fill"
+              >
+                Não, desistir
+              </b-button>
+              <b-button
+                variant="danger"
+                class="float-right  btn-fill"
+                @click="deleteUser(idUser)"
+              >
+                Sim, desejo 
+              </b-button>
+            <input type="text" name="id" v-model="idUser">
+            </template>
           </b-modal>
           </card>
         </div>
@@ -76,7 +109,8 @@
     data () {
       return {
         profiles: [],
-        user: []
+        user: {},
+        idUser: Number
       }
     },
     methods: {
@@ -85,8 +119,8 @@
         this.$refs['modal-edit'].show()
         axios.get('http://192.168.10.22:4000/api/webservice/users/'+id)
         .then( response => {
-          console.log(response)
-          //this.user = response.data
+          console.log(response.data[0])
+          this.user = response.data[0];
         })
         .catch( error => {
           console.log(error)
@@ -104,51 +138,35 @@
           console.log(error)
         });
       },
-      showMsgBoxOne(id) {
+      modalDeleteUser(id) {
+        
+        console.log('clicou em excluir')
+        //this.$refs['modal-1'].show()
+        this.idUser = id;
+        console.log(this.idUser);
+        this.$refs['modal-delete'].show()
+      },
+      deleteUser(id) {
         let axiosConfig = {
           headers: {
               'Content-Type': 'application/json',
-              'Access-Control-Allow-Origin': '*',
-              'X-Requested-With': 'XMLHttpRequest',
-              'Access-Control-Allow-Origin': '*',
-              'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
-              'Access-Control-Allow-Headers': '*',
+              'Access-Control-Allow-Origin': '*'
           }
         };
-        console.log('clicou em excluir')
-        //this.$refs['modal-1'].show()
-        this.$bvModal.msgBoxConfirm('Deseja realmente excluir esse usuário?', {
-          title: 'Excluir',
-          size: 'sm',
-          buttonSize: 'sm',
-          okVariant: 'danger btn-fill',
-          cancelVariant: 'primary btn-fill',
-          okTitle: 'Sim, exluir',
-          cancelTitle: 'Não, desistir',
-          centered: false
-        })
-        .then( function (response) {
-          // console.log(response)
-          // console.log({id})
+        axios.delete('http://192.168.10.22:4000/api/webservice/users/' + id,{
+          headers: axiosConfig
+        }).then(res => {
+          console.log(res)
+          this.allUsers()
+          this.$refs['modal-delete'].hide()
+          Vue.swal({
+            type: 'success',
+            title: 'Sucesso',
+            text: 'Usuário excluido.'
+          });
           
-          axios.delete('http://192.168.10.22:4000/api/webservice/users/' + id,{
-            headers: axiosConfig
-          }).then(res => {
-            console.log(res)
-            //this.allUsers()
-            Vue.swal({
-              type: 'success',
-              title: 'Sucesso',
-              text: 'Usuário excluido.'
-            });
-            
-          }).catch(erro => {
-            console.log(erro)
-          })
-        })
-        .catch(err => {
-          // An error occurred
-          console.log(err)
+        }).catch(erro => {
+          console.log(erro)
         })
       }
     },

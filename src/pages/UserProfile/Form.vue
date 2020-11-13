@@ -1,5 +1,5 @@
 <template>
-    <form>
+    <form ref="form">
       <div class="row">
         <!-- <div class="col-md-5">
           <base-input type="text"
@@ -93,16 +93,32 @@
           <base-input type="text"
                     label="Avatar"
                     placeholder="Url do avatar"
+                    name="userWebservice_avatar"
                     v-model="user.userWebservice_avatar">
+          </base-input>
+        </div>
+        <div class="col-md-12">
+          <base-input type="text"
+                    label="Id"
+                    name="userWebservice_id"
+                    v-model="user.userWebservice_id">
           </base-input>
         </div>
       </div>
       <div class="text-center">
-        <button type="submit" class="btn btn-info btn-fill float-right" @click.prevent="createProfile">
-          Cadastrar
-          <i class="nc-icon nc-simple-add"></i>
-          
+        <div v-if="typeData == 'cadastro'">
+          <button type="submit" class="btn btn-primary btn-fill float-right" @click.prevent="createProfile">
+            cadastrar
+            <i class="fa fa-save"></i>
+          </button>
+        </div>
+        <div v-else>
+            <button type="submit" class="btn btn-primary btn-fill float-right" @click.prevent="updateProfile">
+            Atualizar
+            <i class="fa fa-edit"></i>
         </button>
+        </div>
+        
       </div>
       <div class="clearfix"></div>
     </form>
@@ -110,7 +126,7 @@
 
 <script>
   import axios from 'axios';
-    import Vue from 'vue';
+  import Vue from 'vue';
   import VueSweetalert2 from 'vue-sweetalert2';
 export default {
     props:['user', 'typeData'],
@@ -130,7 +146,8 @@ export default {
             userWebservice_state: this.user.userWebservice_state,
             userWebservice_cep: this.user.userWebservice_cep,
             userWebservice_avatar: this.user.userWebservice_avatar
-        }).then(response => {
+        })
+        .then(response => {
             console.log(response)
             this.clearUser()
             Vue.swal({
@@ -138,9 +155,46 @@ export default {
               title: 'Sucesso',
               text: 'Usuário cadastrado.'
             });
-        }).catch(error => {
+        })
+        .catch(error => {
             console.log(error)
         })
+      },
+      updateProfile () {
+        console.log(this.user.userWebservice_id)
+        axios({
+          method: 'PUT',
+          url: 'http://192.168.10.22:4000/api/webservice/users/'+this.user.userWebservice_id,
+          data: {
+            userWebservice_username: this.user.userWebservice_username,
+            userWebservice_email: this.user.userWebservice_email,
+            userWebservice_name: this.user.userWebservice_name,
+            userWebservice_lastname: this.user.userWebservice_lastname,
+            userWebservice_address: this.user.userWebservice_address,
+            userWebservice_complement: this.user.userWebservice_complement,
+            userWebservice_number: this.user.userWebservice_number,
+            userWebservice_district: this.user.userWebservice_district,
+            userWebservice_city: this.user.userWebservice_city,
+            userWebservice_state: this.user.userWebservice_state,
+            userWebservice_cep: this.user.userWebservice_cep,
+            userWebservice_avatar: this.user.userWebservice_avatar
+          }
+        })
+        .then( response => {
+          Vue.swal({
+            type: 'success',
+            title: 'Sucesso',
+            text: 'Dados do usuário alterado.'
+          });
+          this.$refs['modal-edit'].hide()
+        })
+        .catch( error => {
+          Vue.swal({
+            type: 'error',
+            title: 'Erro',
+            text: 'Ocorreu um erro inesperado'
+          });
+        });
       },
       clearUser() {
         this.user.userWebservice_username = '';
