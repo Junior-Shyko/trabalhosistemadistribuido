@@ -71,6 +71,7 @@
               <b-button
                 variant="secondary"
                 class="float-left  btn-fill"
+                 @click="hideModalDeleteUser"
               >
                 Não, desistir
               </b-button>
@@ -81,7 +82,7 @@
               >
                 Sim, desejo 
               </b-button>
-            <input type="text" name="id" v-model="idUser">
+            <input type="hidden" name="id" v-model="idUser">
             </template>
           </b-modal>
           </card>
@@ -125,6 +126,9 @@
         .catch( error => {
           console.log(error)
         })
+      },
+      hideModalDeleteUser: function() {
+        this.$refs['modal-delete'].hide()
       },
       allUsers: function() {
         axios.get('http://192.168.10.22:4000/api/webservice/users')

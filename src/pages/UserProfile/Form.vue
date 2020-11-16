@@ -1,14 +1,22 @@
 <template>
     <form ref="form">
       <div class="row">
-        <!-- <div class="col-md-5">
-          <base-input type="text"
-                    label="Company"
-                    :disabled="true"
-                    placeholder="Light dashboard"
-                    v-model="user.company">
-          </base-input>
-        </div> -->
+        <div class="col-md-12" v-if="typeData == 'atualizar'">
+              <card class="card-user">
+                <img slot="image" src="https://i1.wp.com/www.multarte.com.br/wp-content/uploads/2018/12/fundo-cinza-claro7-1024x683.jpg?resize=696%2C464&ssl=1" alt="..."/>
+                <div class="author">
+                  <a href="#">
+                    <img class="avatar border-gray" :src="user.userWebservice_avatar" />
+
+                    <h4 class="title">
+                      {{user.userWebservice_name}}
+                      <br />
+                      <small>{{user.userWebservice_username}}</small>
+                    </h4>
+                  </a>
+                </div>
+              </card>
+          </div>
         <div class="col-md-3">
           <base-input type="text"
                     label="Username"
@@ -99,7 +107,30 @@
         </div>
         <div class="col-md-12">
           <base-input type="text"
-                    label="Id"
+                    label="Facebook"
+                    placeholder="Url do Facebook"
+                    name="userWebservice_avatar"
+                   v-model="user.userWebservice_facebook">
+          </base-input>
+        </div>
+        <div class="col-md-12">
+          <base-input type="text"
+                    label="Twitter"
+                    placeholder="Url do Intagram"
+                    name="userWebservice_twitter"
+                   v-model="user.userWebservice_twitter">
+          </base-input>
+        </div>
+        <div class="col-md-12">
+          <base-input type="text"
+                    label="Instagram"
+                    placeholder="Url do Instagram"
+                    name="userWebservice_instagram"
+                    v-model="user.userWebservice_instagram">
+          </base-input>
+        </div>
+        <div class="col-md-12">
+          <base-input type="hidden"
                     name="userWebservice_id"
                     v-model="user.userWebservice_id">
           </base-input>
@@ -145,7 +176,10 @@ export default {
             userWebservice_city: this.user.userWebservice_city,
             userWebservice_state: this.user.userWebservice_state,
             userWebservice_cep: this.user.userWebservice_cep,
-            userWebservice_avatar: this.user.userWebservice_avatar
+            userWebservice_avatar: this.user.userWebservice_avatar,
+            userWebservice_facebook: this.user.userWebservice_facebook,
+            userWebservice_twitter: this.user.userWebservice_twitter,
+            userWebservice_instagram: this.user.userWebservice_instagram
         })
         .then(response => {
             console.log(response)
@@ -177,18 +211,26 @@ export default {
             userWebservice_city: this.user.userWebservice_city,
             userWebservice_state: this.user.userWebservice_state,
             userWebservice_cep: this.user.userWebservice_cep,
-            userWebservice_avatar: this.user.userWebservice_avatar
+            userWebservice_avatar: this.user.userWebservice_avatar,
+            userWebservice_facebook: this.user.userWebservice_facebook,
+            userWebservice_twitter: this.user.userWebservice_twitter,
+            userWebservice_instagram: this.user.userWebservice_instagram
           }
         })
         .then( response => {
+          console.log(response)
           Vue.swal({
             type: 'success',
             title: 'Sucesso',
             text: 'Dados do usuário alterado.'
           });
-          this.$refs['modal-edit'].hide()
+          setTimeout(() => {
+            document.location.reload(true);
+          }, 3000);
+          //this.$refs['modal-edit'].hide()
         })
         .catch( error => {
+          console.log(error)
           Vue.swal({
             type: 'error',
             title: 'Erro',
@@ -209,6 +251,9 @@ export default {
         this.user.userWebservice_state = '';
         this.user.userWebservice_cep = '';
         this.user.userWebservice_avatar = '';
+        this.user.userWebservice_facebook = '';
+        this.user.userWebservice_twitter = '';
+        this.user.userWebservice_instagram = '';
       }
     },
     created() {
